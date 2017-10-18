@@ -19,17 +19,19 @@ public class Main extends Application {
 	public static File openedFile;
 
 	public static void main(String[] args) {
+		System.out.println("Running: " + TITLE);
+		System.out.println("Source Directory: " + sourceDirectory);
 		launch(args);
 	}
 
-	public static Script loadScript(File file) throws FileNotFoundException {
-		Gson json = new Gson();
-		return json.fromJson(new FileReader(file), Script.class);
+	public static ScriptSerializer loadScript(File file) throws FileNotFoundException {
+		return new Gson().fromJson(new FileReader(file), ScriptSerializer.class);
 	}
 
 	@Override
 	public void start(Stage stage) {
 		try {
+			System.out.println("Initializing GUI..");
 			stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("ide.fxml"))));
 			stage.setTitle(TITLE);
 			stage.setMaximized(true);
