@@ -14,7 +14,7 @@ public class ScriptSerializer {
 	public String display_name;
 	public int version;
 	public String display_version;
-	public ArrayList<HashMap<String, Object>> functions;
+	public ArrayList<FunctionSerializer> functions;
 
 }
 
