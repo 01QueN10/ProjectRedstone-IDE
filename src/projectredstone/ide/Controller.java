@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
@@ -97,7 +96,7 @@ public class Controller implements Initializable {
 		//TODO Stop loading if the file is same as before
 		File file = getFile(fileView.getSelectionModel().getSelectedItem());
 		System.out.println("Selected file: " + file.getPath()); /*
-		if (file.getPath().endsWith(".prs")) try {
+		if (file.getPath().toUpperCase().endsWith(".prs")) try {
 			System.out.println("Load file: " + file.getPath());
 			setupWorkspace(Main.loadScript(new File(file.getPath())));
 		} catch (FileNotFoundException e) {
