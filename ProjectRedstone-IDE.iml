@@ -15,10 +15,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/resouces" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="com.google.code.gson:gson:2.8.1" level="project" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit4">
         <CLASSES>
@@ -30,5 +30,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="ProjectRedstone-API_main" />
+    <orderEntry type="library" name="ch.qos.logback:logback-classic:1.2.3" level="project" />
+    <orderEntry type="library" name="ch.qos.logback:logback-core:1.2.3" level="project" />
+    <orderEntry type="library" name="org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="com.google.code.gson:gson:2.8.2" level="project" />
   </component>
 </module>

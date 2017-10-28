@@ -2,76 +2,95 @@ package projectredstone.ide;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
+import com.google.gson.JsonSyntaxException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import qn.projectredstone.api.ProjectRedstoneAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import projectredstone.ide.api.FunctionData;
+import projectredstone.ide.api.Linker;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Set;
+import java.nio.file.Files;
 
 public class Main extends Application {
 
 	public static final String TITLE = "ProjectRedstone IDE 1.0";
 	public static File sourceDirectory;
-	public static File api;
+	public static File apiDirectory;
 	public static final File SETTINGS = new File("settings.json");
+	public static final Logger LOGGER = LoggerFactory.getLogger("ProjectRedstone");
 
 	public static void main(String[] args) {
-		System.out.println("Running: " + TITLE);
-		System.out.println("Source Directory: " + sourceDirectory);
-		System.out.println("Loading settings..");
-		loadSettings();
+		LOGGER.info("Launching application..");
 		launch(args);
 	}
 
-	public static void loadSettings() {
+	public void init() {
+		LOGGER.info("Loading settings..");
+		loadSettings();
+		LOGGER.info("Source directory: {}", sourceDirectory);
+		LOGGER.info("API directory: {}", apiDirectory);
+	}
+
+	private void loadSettings() {
 		try {
 			boolean isExists = !SETTINGS.createNewFile();
-			Gson json = new Gson();
+			Gson json = new GsonBuilder().setPrettyPrinting().create();
 			if (!isExists) {
 				Settings settings = new Settings();
-				settings.sourceFolder = "Sources";
-				settings.apiLocation = "Library" + File.separator + "ProjectRedstone-API";
-				json.toJson(settings, new FileWriter(SETTINGS));
+				settings.sourceDirectory = "Sources";
+				settings.apiDirectory = "Library" + File.separator + "ProjectRedstone-API";
+				FileWriter writer = new FileWriter(SETTINGS);
+				json.toJson(settings, writer);
+				writer.flush();
+				writer.close();
 			}
-			Settings settings = json.fromJson(new FileReader(SETTINGS), Settings.class);
-			sourceDirectory = new File(settings.sourceFolder);
-			api = new File("apiLocation");
+			FileReader reader = new FileReader(SETTINGS);
+			try {
+				Settings settings = json.fromJson(reader, Settings.class);
+				reader.close();
+				sourceDirectory = new File(settings.sourceDirectory);
+				apiDirectory = new File(settings.apiDirectory);
+			} catch (JsonSyntaxException | NullPointerException e) {
+				LOGGER.error("Cannot load the config file.");
+				LOGGER.warn("Creating a new config file..");
+				reader.close();
+				Files.delete(SETTINGS.toPath());
+				loadSettings();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void loadAPI(File api) {
+	private void loadAPI(File api) {
 		try {
 			URLClassLoader classLoader = new URLClassLoader(new URL[]{api.toURI().toURL()}, Main.class.getClassLoader());
-			Class linker = classLoader.loadClass("qn.projectredstone.api.Linker");
-			Class functionData = classLoader.loadClass("qn.projectredstone.api.FunctionLinker");
-			@SuppressWarnings("unchecked")
-			Method getRegisteredFunctions = linker.getMethod("getRegisteredFunctions");
-			functionData a = functionData.cast(getRegisteredFunctions.invoke(null));
-		} catch (ClassNotFoundException | MalformedURLException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			Class linkerRaw = classLoader.loadClass("qn.projectredstone.api.Linker");
+			boolean isLinker = false;
+			for (Class interface_ : linkerRaw.getInterfaces()) {
+				if (interface_.newInstance() instanceof Linker) isLinker = true;
+			}
+			if (!isLinker) throw new Exception("qn.projectredstone.apiDirectory.Linker is not a instance of Linker!");
+			Linker linker = (Linker) linkerRaw.newInstance();
+			FunctionData[] registeredFunctions = linker.getRegisteredFunctions();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static ScriptSerializer loadScript(File file) throws FileNotFoundException {
+	private ScriptSerializer loadScript(File file) throws FileNotFoundException {
 		return new Gson().fromJson(new FileReader(file), ScriptSerializer.class);
 	}
 
-	@Override
 	public void start(Stage stage) {
 		try {
-			System.out.println("Initializing GUI..");
+			LOGGER.info("Initializing GUI..");
 			stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("ide.fxml"))));
 			stage.setTitle(TITLE);
 			stage.setMaximized(true);

@@ -1,7 +1,5 @@
 package projectredstone.ide;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -22,7 +20,6 @@ class FunctionSerializer {
 
 	public String name;
 	public int id;
-	@SerializedName("private")
 	public boolean isPrivate;
 	public ArrayList<TypeSerializer> arguments;
 	public ArrayList<FunctionReferenceSerializer> codes;
