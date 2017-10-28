@@ -15,14 +15,13 @@ import projectredstone.ide.api.Linker;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
 
 public class Main extends Application {
 
 	public static final String TITLE = "ProjectRedstone IDE 1.0";
 	public static File sourceDirectory;
 	public static File apiDirectory;
-	public static final File SETTINGS = new File("settings.json");
+	public static final File SETTINGS = new File("UserData" + File.separator + "settings.json");
 	public static final Logger LOGGER = LoggerFactory.getLogger("ProjectRedstone");
 
 	public static void main(String[] args) {
@@ -60,7 +59,7 @@ public class Main extends Application {
 				LOGGER.error("Cannot load the config file.");
 				LOGGER.warn("Creating a new config file..");
 				reader.close();
-				Files.delete(SETTINGS.toPath());
+				SETTINGS.delete();
 				loadSettings();
 			}
 		} catch (IOException e) {

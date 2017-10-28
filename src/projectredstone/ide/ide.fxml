@@ -33,6 +33,9 @@
                   <ComboBox fx:id="functionList" prefWidth="150.0" />
                   <Separator orientation="VERTICAL" prefHeight="25.0" />
                   <CheckBox fx:id="privateFunction" mnemonicParsing="false" text="Private Function" />
+                  <Separator layoutX="226.0" layoutY="10.0" orientation="VERTICAL" prefHeight="25.0" visible="false" />
+                  <Label text="Return Type: " />
+                  <ComboBox prefWidth="150.0" />
                </items>
             </ToolBar>
          </top>
