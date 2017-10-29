@@ -1,5 +1,5 @@
-﻿# ![](icon.png) ProjectRedstone
-> The IDE and Scripting for Minecraft
+﻿# ![](icon_small.png) ProjectRedstone
+> The Scripting IDE and API for Minecraft
 
 Are you tired of developing plugin in Java, working on the unnecessarily huge project, or checking the grammar while using Skript? Then, try this out.
 
