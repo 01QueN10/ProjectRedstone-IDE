@@ -21,7 +21,8 @@ public class Main extends Application {
 	public static final String TITLE = "ProjectRedstone IDE 1.0";
 	public static File sourceDirectory;
 	public static File apiDirectory;
-	public static final File SETTINGS = new File("UserData" + File.separator + "settings.json");
+	public static final File USER_DATA = new File("UserData");
+	public static final File SETTINGS = new File(USER_DATA.getPath() + File.separator + "settings.json");
 	public static final Logger LOGGER = LoggerFactory.getLogger("ProjectRedstone");
 
 	public static void main(String[] args) {
@@ -38,6 +39,7 @@ public class Main extends Application {
 
 	private void loadSettings() {
 		try {
+			USER_DATA.mkdir();
 			boolean isExists = !SETTINGS.createNewFile();
 			Gson json = new GsonBuilder().setPrettyPrinting().create();
 			if (!isExists) {
